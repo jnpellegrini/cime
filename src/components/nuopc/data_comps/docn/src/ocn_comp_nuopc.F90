@@ -307,7 +307,7 @@ contains
     call t_stopf('docn_strdata_init')
 
     ! Check that mesh lats and lons correspond to those on the input domain file
-    call dshr_check_mesh(mesh, sdat, 'docn', rc=rc)
+    call dshr_check_mesh(mesh, sdat, 'docn', tolerance=1.e-3_r8, rc=rc)
     if (ChkErr(rc,__LINE__,u_FILE_u)) return
 
     ! Realize the actively coupled fields, now that a mesh is established and

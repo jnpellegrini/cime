@@ -465,15 +465,17 @@ contains
        ! do nothing extra
 
     case('SSTDATA')
-       if (first_time .and. .not. read_restart) then
-          do n = 1,lsize
-             if (Si_ifrac(n) > 0.0_r8) then
-                water(n) = flux_Qacc0
-             else
-                water(n) = 0.0_r8
-             end if
-          end do
-          ! iFrac0 = iFrac  ! previous step's ice fraction
+       if (first_time) then
+          if (.not. read_restart) then
+             do n = 1,lsize
+                if (Si_ifrac(n) > 0.0_r8) then
+                   water(n) = flux_Qacc0
+                else
+                   water(n) = 0.0_r8
+                end if
+             end do
+             ! iFrac0 = iFrac  ! previous step's ice fraction
+          endif
 
           call ESMF_MeshGet(mesh, spatialDim=spatialDim, numOwnedElements=numOwnedElements, rc=rc)
           if (ChkErr(rc,__LINE__,u_FILE_u)) return
@@ -484,7 +486,7 @@ contains
              yc(n) = ownedElemCoords(2*n)
           end do
           deallocate(ownedElemCoords)
-       endif
+       end if
 
        tfreeze(:) = shr_frz_freezetemp(So_s(:)) + tFrz ! convert to Kelvin
 
